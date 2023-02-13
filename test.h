@@ -10,11 +10,17 @@ typedef struct node{
 typedef struct bst{
 	struct node* root;
 	int size;
-} bst; 
+} bst;
+
+
+typedef struct fg{
+	struct node* parent;
+	char wh;
+}parent;
 
 void init(bst* tree);
 
-void add(bst* tree,int data);
+void append(bst* tree,int data);
 
 static void search(node* root,node* element);
 
@@ -24,4 +30,8 @@ void targetGet(node* root);
 
 void afterGet(node* root);
 
-void balance(node* root);
+void balance(parent father,node* root);
+
+void balanceChildLeft(parent father,node* root);
+
+void balanceChildRight(parent father,node* root);

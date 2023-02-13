@@ -14,12 +14,12 @@ int main(int argc, char *argv[]) {
 	printf("%d\n",tree.size);
 	
 	//添加元素 
-	add(&tree,23);
-	add(&tree,5);
-	add(&tree,6);
-	add(&tree,8);
-	add(&tree,58);
-	add(&tree,61);
+	append(&tree,23);
+	append(&tree,5);
+	append(&tree,6);
+	append(&tree,8);
+	append(&tree,58);
+	append(&tree,61);
 	
 	//打印树的大小 
 	printf("%d\n",tree.size);

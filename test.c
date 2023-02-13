@@ -7,7 +7,7 @@ void init(bst* tree){
 	tree->root = NULL;
 }
 
-void add(bst* tree,int data){
+void append(bst* tree,int data){
 	//创建节点 
 	node* element = (node*)malloc(sizeof(node));
 	
@@ -27,7 +27,6 @@ void add(bst* tree,int data){
 	}else{
 		search(root,element);
 		tree->size += 1;
-		
 		if(root->lc == NULL){
 			root->lh = 0;
 		}else{
@@ -42,6 +41,8 @@ void add(bst* tree,int data){
 		
 		root->flag = root->lh - root->rh;
 	}
+	
+	root = tree->root;
 }
 
 static void search(node* root,node* element){
@@ -82,6 +83,116 @@ static void search(node* root,node* element){
 	root->flag = root->lh - root->rh;
 }
 
+//-----------------------------------------
+
+void balance(parent father,node* root){
+	if(abs(root->flag) >= 2){
+		if(root->lh > root->rh){
+			if(root->rc == NULL){
+				switch(father.wh){
+					case 'l': {
+						father.parent->lc = root->lc;
+						root->lc = root->lc->rc;
+						father.parent->lc->rc = root;
+					};break;
+					case 'r':{
+						father.parent->rc = root->lc;
+						root->lc = root->lc->rc;
+						father.parent->rc->rc = root;
+					};break;
+				}
+			}else{
+				parent kk;
+				kk.parent = root;
+				kk.wh = 'l';
+				if(root->lc->flag > 0){
+					switch(father.wh){
+						case 'l': {
+							father.parent->lc = root->lc;
+							root->lc = root->lc->rc;
+							father.parent->lc->rc = root;
+						};break;
+						case 'r':{
+							father.parent->rc = root->lc;
+							root->lc = root->lc->rc;
+							father.parent->rc->rc = root;
+						};break;
+					}
+				}else{
+					balanceChildLeft(kk,root->lc);
+				}
+			}
+		}else{
+			if(root->lc == NULL){
+				switch(father.wh){
+					case 'l': {
+						father.parent->lc = root->rc;
+						root->rc = root->rc->lc;
+						father.parent->lc->lc = root;
+					};break;
+					case 'r':{
+						father.parent->rc = root->rc;
+						root->rc = root->rc->lc;
+						father.parent->rc->lc = root;
+					};break;
+				}
+			}else{
+				parent kk;
+				kk.parent = root;
+				kk.wh = 'r';
+				if(root->rc->flag < 0){
+					switch(father.wh){
+						case 'l': {
+							father.parent->lc = root->rc;
+							root->rc = root->rc->lc;
+							father.parent->lc->lc = root;
+						};break;
+						case 'r':{
+							father.parent->rc = root->rc;
+							root->rc = root->rc->lc;
+							father.parent->rc->lc = root;
+						};break;
+					}
+				}else{
+					balanceChildRight(kk,root->lc);
+				}
+			}
+		}
+	}
+}
+
+void balanceChildLeft(parent father,node* root){
+	switch(father.wh){
+		case 'l': {
+			father.parent->lc = root->rc;
+			root->rc = root->lc->rc;
+			father.parent->lc->rc = root;
+		};break;
+		case 'r':{
+			father.parent->rc = root->lc;
+			root->lc = root->lc->rc;
+			father.parent->rc->rc = root;
+		};break;
+	}
+}
+
+void balanceChildRight(parent father,node* root){
+	switch(father.wh){
+		case 'l': {
+			father.parent->lc = root->lc;
+			root->lc = root->lc->rc;
+			father.parent->lc->rc = root;
+		};break;
+		case 'r':{
+			father.parent->rc = root->lc;
+			root->lc = root->lc->rc;
+			father.parent->rc->rc = root;
+		};break;
+	}
+}
+
+//---------------------------
+
 void beforeGet(node* root){
 	if(root->lc == NULL){
 	}else{
@@ -121,15 +232,5 @@ void afterGet(node* root){
 	if(root->lc == NULL){
 	}else{
 		beforeGet(root->lc);
-	}
-}
-
-void balance(node* root){
-	if(abs(root->flag) == 2){
-		if(root->lh > root->rh){
-			puts("节点左树高\n");
-		}else{
-			puts("节点右树高\n");
-		}
 	}
 }
